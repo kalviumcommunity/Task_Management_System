@@ -2,8 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 import ReactCompareImage from 'react-compare-image';
-import image from './assets/capstone-1.jpeg';
-import image1 from './assets/capstone-2.jpeg'
+import image from "./assets/capstone-1.jpeg";
+import image1 from "./assets/capstone-2.jpeg";
 
 function Home() {
   const navigate = useNavigate();
