@@ -5,6 +5,9 @@ import { Link, useNavigate } from "react-router-dom";
 
 axios.defaults.withCredentials = true;
 
+
+//  Addded user authentication
+
 const Login = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState("");
