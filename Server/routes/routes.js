@@ -77,4 +77,14 @@ router.post('/login', async (req, res) => {
     }
   });
   
+  router.get("/todos",async (req,res)=>{
+    try{
+      const todos=await Todo.find();
+      res.json(todos);
+      }catch(error){
+        console.error("Error fetching todos:",error);
+        res.status(500).json({message:"Error fetching todos"});
+  }})
+  
+
   module.exports = router;
