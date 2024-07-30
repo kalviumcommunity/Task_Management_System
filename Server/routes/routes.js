@@ -52,7 +52,6 @@ router.post('/signup', async (req, res) => {
 });
 
 // Login Route
-
 router.post('/login', async (req, res) => {
     const { email, password } = req.body;
     try {
@@ -70,7 +69,15 @@ router.post('/login', async (req, res) => {
         return res.status(400).json({ message: 'Password is incorrect' });
       }
   
-      res.json({ message: 'Login successful', user: { username: user.username, email: user.email } });
+      const token = jwt.sign(
+        { username: user.username },
+        process.env.JWT_SECRET,
+        { expiresIn: '1h' }
+      );
+  
+      res.cookie('authToken', token, { maxAge: 3600000, httpOnly: true });
+      res.cookie('username', user.username, { maxAge: 3600000 });
+      res.json({ message: 'Login successful' });
     } catch (error) {
       console.error('Error logging in:', error);
       return res.status(500).json({ message: 'Error logging in' });
