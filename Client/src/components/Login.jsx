@@ -1,14 +1,56 @@
 import './Login.css';
 import { useState } from 'react';
+import axios from 'axios';
+import { Link, useNavigate } from "react-router-dom";
 
+axios.defaults.withCredentials = true;
 
 const Login = () => {
-    const [username, setUsername] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // login data
   const [email1, setEmail1] = useState("")
   const [password1, setPassword1] = useState("")
+
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    
+    try {
+      const response = await axios.post("http://localhost:3001/auth/login", {
+        email1,
+        password1,
+      });
+      console.log(response);
+      navigate("/main")
+    } catch (error) {
+      console.error("An error occurred during login:", error);
+      alert("Password incorrect !");
+    } 
+  };
+
+  const handleSubmit2 = (e) => {
+    e.preventDefault();
+
+    axios.post("http://localhost:3001/auth/signup", {
+      username,
+      email,
+      password
+    })
+    .then((response) => {
+      if(response.data.status) {
+        navigate("/main")
+      } else {
+        alert("Email already exists")
+      }
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }
 
   return (
     <div className="section">
@@ -127,7 +169,3 @@ const Login = () => {
 
 
 export default Login;
-
-
-
-
