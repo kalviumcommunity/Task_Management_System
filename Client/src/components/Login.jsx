@@ -24,9 +24,10 @@ const Login = () => {
     
     try {
       const response = await axios.post("http://localhost:3001/auth/login", {
-        email1,
-        password1,
+        email:email1,
+        password:password1,
       });
+      console.log(password1, email1);
       console.log(response);
       navigate("/main")
     } catch (error) {
@@ -44,6 +45,7 @@ const Login = () => {
       password
     })
     .then((response) => {
+      console.log(password, email);
       if(response.data.status) {
         navigate("/main")
       } else {

@@ -1,0 +1,92 @@
+const express = require('express');
+const bcrypt = require('bcrypt');
+const User = require('../models/User');
+const { Todo } = require('../models/Data');
+const router = express.Router();
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+
+dotenv.config(); // Load environment variables
+
+// Sign Up Route
+router.post('/signup', async (req, res) => {
+  const { username, email, password } = req.body;
+  try {
+    if (!username || !email || !password) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: 'User already exists' });
+    }
+
+    const hashPassword = await bcrypt.hash(password, 10);
+    const newUser = new User({
+      username,
+      email,
+      password: hashPassword,
+    });
+
+    await newUser.save();
+    return res.json({ status: true, message: 'User registered successfully' });
+  } catch (error) {
+    console.error('Error registering user:', error);
+    return res.status(500).json({ message: 'Error registering user' });
+  }
+});
+
+// Login Route
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    if (!email || !password) {
+      return res.status(400).json({ message: 'All fields are required' });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'User is not registered' });
+    }
+
+    const validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) {
+      return res.status(400).json({ message: 'Password is incorrect' });
+    }
+
+    const token = jwt.sign(
+      { username: user.username, userId: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
+    res.cookie('token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+      maxAge: 3600000, // 1 hour
+      sameSite: 'Strict', // or 'Lax', depending on your needs
+    });
+    res.json({ message: 'Login successful' });
+  } catch (error) {
+    console.error('Error logging in:', error);
+    return res.status(500).json({ message: 'Error logging in' });
+  }
+});
+
+ 
+
+router.post('/logout', async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    res.cookie('token', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 0,
+    });
+    res.status(200).send({ message: 'Logout successful' });
+  } catch (error) {
+    res.status(500).send({ message: 'Internal server error during logout' });
+  }
+});
+
+module.exports = router;

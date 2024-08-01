@@ -7,17 +7,32 @@ const Main = () => {
   const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);
   const [task, setTask] = useState('');
+  const [todos, setTodos] = useState([]);
 
   const addTask = () => {
     if (task) {
-axios.post('http://localhost:3001/auth/tasks', { task })
-        .then(result => {
+      axios
+        .post('http://localhost:3001/todos/tasks', { task })
+        .then((result) => {
           setTasks([...tasks, result.data]);
           setTask('');
         })
-        .catch(err => console.log(err));
+        .catch((err) => console.log(err));
     }
   };
+  useEffect(()=>{
+    axios
+    .get('http://localhost:3001/todos/todo')
+    .then((res) => {
+      console.log(res.data.todos);
+      setTodos(res.data.todos);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+  },[])
+
+  
 
   return (
     <div className="task-management-system">
@@ -32,7 +47,11 @@ axios.post('http://localhost:3001/auth/tasks', { task })
           <h1>Task Management System</h1>
         </div>
         <div>
-          <button className="home-full-rounded" onClick={() => navigate('/')}>
+          <button className="home-full-rounded" onClick={async() => {
+            await axios.post("http://localhost:3001/auth/logout")
+            console.log(document.cookie)
+            document.cookie=""
+            navigate('/')}}>
             <span>Logout</span>
             <div className="home-border home-full-rounded"></div>
           </button>
@@ -42,7 +61,7 @@ axios.post('http://localhost:3001/auth/tasks', { task })
         <div className="column pending">
           <h2>Pending</h2>
           <div className="tasks">
-            {tasks.map((t, index) => (
+            {todos.map((t, index) => (
               <div key={index} className="task">
                 {index + 1}. {t.task}
               </div>
