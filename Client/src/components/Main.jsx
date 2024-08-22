@@ -7,7 +7,7 @@ const Main = () => {
   const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);
   const [task, setTask] = useState('');
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState([{task:"babu"},{task:"shiva"},{task:"pillalu"}]);
 
   const addTask = () => {
     if (task) {
@@ -31,8 +31,17 @@ const Main = () => {
       console.log(err);
     });
   },[])
-
-  
+function drag(e){
+  e.dataTransfer.setData("text", e.target.id);
+}
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+function drop(ev) {
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  ev.target.appendChild(document.getElementById(data));
+}
 
   return (
     <div className="task-management-system">
@@ -58,11 +67,11 @@ const Main = () => {
         </div>
       </nav>
       <div className="board">
-        <div className="column pending">
+        <div className="column pending"   onDrop={(e)=>{drop(e)}} onDragOver={(e)=>{allowDrop(e)}}>
           <h2>Pending</h2>
-          <div className="tasks">
+          <div className="tasks" >
             {todos.map((t, index) => (
-              <div key={index} className="task">
+              <div key={index} id={index} draggable={true} className="task" onDragStart={drag}>
                 {index + 1}. {t.task}
               </div>
             ))}
@@ -76,11 +85,11 @@ const Main = () => {
           />
           <button onClick={addTask}>Add Task</button>
         </div>
-        <div className="column progress">
+        <div className="column progress" onDrop={(e)=>{drop(e)}} onDragOver={(e)=>{allowDrop(e)}}>
           <h2>Progress</h2>
           {/* Tasks in progress can be shown here */}
         </div>
-        <div className="column completed">
+        <div className="column completed"  onDrop={(e)=>{drop(e)}} onDragOver={(e)=>{allowDrop(e)}}>
           <h2>Completed</h2>
           {/* Completed tasks can be shown here */}
         </div>
