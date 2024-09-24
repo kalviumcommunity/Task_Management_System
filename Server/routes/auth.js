@@ -1,12 +1,20 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const { Todo } = require('../models/Data');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
+const nodemailer = require("nodemailer");
+dotenv.config();
 
-dotenv.config(); // Load environment variables
+const transporter = nodemailer.createTransport({
+  service: "outlook",
+  auth: {
+    user: "managetask@outlook.com",
+    pass: "taskmanager@123",
+  },
+});
 
 // Sign Up Route
 router.post('/signup', async (req, res) => {
@@ -22,6 +30,8 @@ router.post('/signup', async (req, res) => {
     }
 
     const hashPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user
     const newUser = new User({
       username,
       email,
@@ -29,7 +39,23 @@ router.post('/signup', async (req, res) => {
     });
 
     await newUser.save();
-    return res.json({ status: true, message: 'User registered successfully' });
+
+    const mailOptions = {
+      from: 'managetask@outlook.com',
+      to: email,
+      subject: 'Welcome to Task Manager',
+      text: `Hello ${username},\n\nThank you for signing up for our Task Manager app!\n\nBest Regards,\nTask Manager Team`,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Error sending email:', error);
+        return res.status(500).json({ status: true, message: 'User registered but error sending email' });
+      } else {
+        console.log('Email sent:', info.response);
+        return res.json({ status: true, message: 'User registered successfully, email sent' });
+      }
+    });
   } catch (error) {
     console.error('Error registering user:', error);
     return res.status(500).json({ message: 'Error registering user' });
@@ -73,7 +99,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
- 
+
 
 router.post('/logout', async (req, res) => {
   try {
