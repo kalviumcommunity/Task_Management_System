@@ -1,12 +1,11 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const { Todo } = require('../models/Data');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const dotenv = require('dotenv');
 
-dotenv.config(); // Load environment variables
+dotenv.config();
 
 router.post('/tasks', async (req, res) => {
   const { task } = req.body;
