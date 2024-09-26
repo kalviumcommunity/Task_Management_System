@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import AccountDetails from './Modal';
@@ -8,7 +8,7 @@ const Main = () => {
   const navigate = useNavigate();
   const [tasks, setTasks] = useState([]);
   const [task, setTask] = useState('');
-  const [todos, setTodos] = useState([{task:"babu"},{task:"shiva"},{task:"pillalu"}]);
+  const [todos, setTodos] = useState([]);
 
   const addTask = () => {
     if (task) {
