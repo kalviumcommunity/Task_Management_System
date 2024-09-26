@@ -13,8 +13,6 @@ const CLUSTER_LINK = process.env.CLUSTER_LINK;
 
 app.use(express.json());
 app.use(parseCookie())
-console.log('PORT:', PORT);
-console.log('CLUSTER_LINK:', CLUSTER_LINK);
 
 app.use(
   cors({
