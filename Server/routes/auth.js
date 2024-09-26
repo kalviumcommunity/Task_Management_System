@@ -87,11 +87,26 @@ router.post('/login', async (req, res) => {
     );
 
     res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-      maxAge: 3600000, // 1 hour
-      sameSite: 'Strict', // or 'Lax', depending on your needs
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 3600000,
+      sameSite: 'Strict',
     });
+
+    res.cookie('username', user.username, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 3600000,
+      sameSite: 'Strict',
+    });
+
+    res.cookie('email', user.email, {
+      httpOnly: false,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 3600000,
+      sameSite: 'Strict',
+    });
+
     res.json({ message: 'Login successful' });
   } catch (error) {
     console.error('Error logging in:', error);

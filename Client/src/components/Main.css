@@ -81,3 +81,18 @@
     color: #ffffff;
   }
   
+
+  .main-modal {
+    position: absolute;
+    background-color: white;
+    border: 2px solid black;
+    width: 20%;
+    color: black;
+    z-index: 1;
+    border-radius: 20px;
+  }
+  .modal-div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }

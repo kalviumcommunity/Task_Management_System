@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import AccountDetails from './Modal';
 import './Main.css';
 
 const Main = () => {
@@ -46,11 +47,12 @@ function drop(ev) {
   return (
     <div className="task-management-system">
       <nav className="home-navbar">
-        <div className="home-profile">
-          <img
+        <div className="home-profile modal">
+          {/* <img
             src="https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTAxL3JtNjA5LXNvbGlkaWNvbi13LTAwMi1wLnBuZw.png"
             alt="Profile"
-          />
+          /> */}
+          <AccountDetails />
         </div>
         <div className="home-center">
           <h1>Task Management System</h1>
