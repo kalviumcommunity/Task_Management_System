@@ -32,7 +32,7 @@ const Login = () => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3001/auth/login", {
+      const response = await axios.post("http://localhost:3001/auth/login", { Authentication
         email: email1,
         password: password1,
       });
@@ -46,6 +46,14 @@ const Login = () => {
       } else {
         navigate("/main");
       }
+
+        email:email1,
+        password:password1,
+      });
+      console.log(password1, email1);
+      console.log(response);
+      navigate("/main")
+main
     } catch (error) {
       setErrorMessage(error.response?.data?.message || "Login failed. Try again.");
     }
@@ -57,7 +65,7 @@ const Login = () => {
       setErrorMessage("Please fill in all fields.");
       return;
     }
-
+ Authentication
     try {
       const response = await axios.post("http://localhost:3001/auth/signup", {
         username,
@@ -67,6 +75,17 @@ const Login = () => {
 
       if (response.data.status) {
         navigate("/main");
+
+    axios.post("http://localhost:3001/auth/signup", {
+      username,
+      email,
+      password
+    })
+    .then((response) => {
+      console.log(password, email);
+      if(response.data.status) {
+        navigate("/main")
+ main
       } else {
         setErrorMessage("Email already exists.");
       }

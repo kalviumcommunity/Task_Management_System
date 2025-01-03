@@ -2,16 +2,17 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
-const router = require('./routes/routes');
+const authRouter = require("./routes/auth")
+const todoRouter = require("./routes/todo")
+const parseCookie = require("cookie-parser");
+const { authenticate } = require('./middleware/authenticate');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 const CLUSTER_LINK = process.env.CLUSTER_LINK;
 
-app.use(express.json()); // Middleware to parse JSON bodies
-
-console.log('PORT:', PORT);
-console.log('CLUSTER_LINK:', CLUSTER_LINK);
+app.use(express.json());
+app.use(parseCookie())
 
 app.use(
   cors({
@@ -20,7 +21,8 @@ app.use(
   })
 );
 
-app.use('/auth', router);
+app.use('/auth', authRouter);
+app.use('/todos', authenticate, todoRouter);
 
 mongoose
   .connect(CLUSTER_LINK)
